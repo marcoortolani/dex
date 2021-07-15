@@ -3,4 +3,6 @@ channels:
   - defaults
 dependencies:
   - python=3.8
+  - pandas
+  - seaborn
 prefix: /usr/local/Caskroom/miniconda/base/envs/biobinder
