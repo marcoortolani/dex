@@ -1,8 +1,11 @@
-name: biobinder
+name: bioinformatics
 channels:
   - defaults
 dependencies:
   - python=3.8
   - pandas
+  - liac-arff
+  - jupyter
   - seaborn
-prefix: /usr/local/Caskroom/miniconda/base/envs/biobinder
+  - gseapy
+prefix: /usr/local/Caskroom/miniconda/base/envs/bioinformatics
