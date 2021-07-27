@@ -1,6 +1,7 @@
 name: bioinformatics
 channels:
   - defaults
+  - bioconda
 dependencies:
   - python=3.8
   - pandas
