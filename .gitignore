@@ -1,3 +1,11 @@
+# ignore MacOS temo file
 .DS_Store
-results/
+
+# keep results folders, without all results files
+results/*
+
+# exception to the rule
+!results/.gitkeep 
+
+# ignore jupyter checkpoints
 notebook/.ipynb_checkpoints/
