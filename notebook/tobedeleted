@@ -1,0 +1,113 @@
+# %% markdown
+# # Differential Expression Analysis
+# ## PCA visualisation
+# %% codecell
+# Import necessary Python libraries
+
+# Data analysis
+import numpy as np
+import pandas as pd
+
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+# Graphics and plotting
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+#import seaborn as sns
+# %% codecell
+# Reading in data from tsv file (the "Feature ID" column will be used as id)
+
+filename = '../data/Merged_differential_expression_results.tsv'
+
+#dex = pd.read_csv(filename, index_col=0, sep='\t')
+dex = pd.read_csv(filename, dtype={'entrezgene': str}, sep='\t')
+# %% codecell
+# Separate the columns into strings (all gene names, descriptions, ...) and numeric (gene expressions, fold changes, and quality metrics)
+all_cols = list(dex.columns)
+descr_cols = ['Feature_ID', 'entrezgene', 'external_gene_name', 'gene_biotype', 'external_gene_source', 'description']
+numeric_cols = [x for x in all_cols if x not in set(descr_cols)]
+
+# The select samples, fold metrics
+sample_cols = [x for x in numeric_cols if 'sample' in x]
+linfold_cols = [x for x in numeric_cols if 'linearFC' in x]
+logfold_cols = [x for x in numeric_cols if 'logFC' in x]
+
+control_3h_cols = ['sample.'+str(x) for x in range(1,5)]
+control_12h_cols = ['sample.'+str(x) for x in range(5,9)]
+CC_3h_cols = ['sample.'+str(x) for x in range(9,13)]
+CC_12h_cols = ['sample.'+str(x) for x in range(13,17)]
+BL21_3h_cols = ['sample.'+str(x) for x in range(17,21)]
+BL21_3h_bcols = ['sample.'+str(x) for x in range(21,25)]
+LPS_3h_cols = ['sample.'+str(x) for x in range(25,29)]
+LPS_21h_cols = ['sample.'+str(x) for x in range(29,33)]
+
+# Associate fold column name with p-value column name
+adj_p_value_columns = {
+    'BL21_12hr-BL21_3hr_logFC': 'BL21_12hr-BL21_3hr_adj.P.Val',
+    'BL21_12hr-control_12hr_logFC': 'BL21_12hr-BL21_3hr_adj.P.Val',
+    'BL21_3hr-control_3hr_logFC': 'BL21_3hr-control_3hr_adj.P.Val',
+    'CC_12hr-CC_3hr_logFC': 'CC_12hr-CC_3hr_adj.P.Val',
+    'CC_12hr-control_12hr_logFC':'CC_12hr-control_12hr_adj.P.Val',
+    'CC_3hr-control_3hr_logFC':'CC_3hr-control_3hr_adj.P.Val',
+    'control_12hr-control_3hr_logFC':'control_12hr-control_3hr_adj.P.Val',
+    'LPS_12hr-control_12hr_logFC':'LPS_12hr-control_12hr_adj.P.Val',
+    'LPS_12hr-LPS_3hr_logFC':'LPS_12hr-LPS_3hr_adj.P.Val',
+    'LPS_3hr-control_3hr_logFC':'LPS_3hr-control_3hr_adj.P.Val'
+}
+# %% codecell
+data = dex[sample_cols]
+# %% codecell
+# PCA
+# Separating out the features
+x = data.loc[:, sample_cols].values
+# Separating out the target
+y = df.loc[:,['target']].values
+# Standardizing the features
+x = StandardScaler().fit_transform(x)
+# %% codecell
+# Graphics and plotting
+import matplotlib.pyplot as plt
+
+import pandas as pd
+
+
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
+# load dataset into Pandas DataFrame
+df = pd.read_csv(url, names=['sepal length','sepal width','petal length','petal width','target'])
+# %% codecell
+from sklearn.preprocessing import StandardScaler
+# %% codecell
+features = ['sepal length', 'sepal width', 'petal length', 'petal width']
+# Separating out the features
+x = df.loc[:, features].values
+# Separating out the target
+y = df.loc[:,['target']].values
+# Standardizing the features
+x = StandardScaler().fit_transform(x)
+# %% codecell
+from sklearn.decomposition import PCA
+pca = PCA(n_components=2)
+principalComponents = pca.fit_transform(x)
+principalDf = pd.DataFrame(data = principalComponents
+             , columns = ['principal component 1', 'principal component 2'])
+# %% codecell
+finalDf = pd.concat([principalDf, df[['target']]], axis = 1)
+# %% codecell
+fig = plt.figure(figsize = (8,8))
+ax = fig.add_subplot(1,1,1)
+ax.set_xlabel('Principal Component 1', fontsize = 15)
+ax.set_ylabel('Principal Component 2', fontsize = 15)
+ax.set_title('2 component PCA', fontsize = 20)
+targets = ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica']
+colors = ['r', 'g', 'b']
+for target, color in zip(targets,colors):
+    indicesToKeep = finalDf['target'] == target
+    ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1']
+               , finalDf.loc[indicesToKeep, 'principal component 2']
+               , c = color
+               , s = 50)
+ax.legend(targets)
+ax.grid()
+# %% codecell
