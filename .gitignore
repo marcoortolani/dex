@@ -1,4 +1,4 @@
-# ignore MacOS temo file
+# ignore MacOS temp file
 .DS_Store
 
 # keep results folders, without all results files
@@ -9,3 +9,10 @@ results/*
 
 # ignore jupyter checkpoints
 notebook/.ipynb_checkpoints/
+
+# ignore python3 cache
+__pycache__/
+ *.pyc
+
+# ignore other conf files/dir
+.idea/
