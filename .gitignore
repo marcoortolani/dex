@@ -3,6 +3,7 @@
 
 # keep results folders, without all results files
 results/*
+plots/*
 
 # exception to the rule
 !results/.gitkeep 
