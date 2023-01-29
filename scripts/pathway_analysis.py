@@ -47,14 +47,36 @@ colnames.loc['sample2_3h'] = ['sample.19', 'sample.11', 'sample.27']
 colnames.loc['sample3_3h'] = ['sample.18', 'sample.10', 'sample.26']
 colnames.loc['sample4_3h'] = ['sample.17', 'sample.9', 'sample.25']
 
+colPlotnames = pd.DataFrame(columns=['HRPII_BL21', 'HRPII_CC', 'LPS'])
+colPlotnames.loc['logFC_3h'] = ['HRPII_BL21 (3h)', 'HRPII_CC (3h)', 'LPS (3h)']
+colPlotnames.loc['logFC_12h'] = ['HRPII_BL21 (12h)', 'HRPII_CC (12h)', 'LPS (12h)']
+colPlotnames.loc['adjPval_3h'] = ['BL21_3hr-control_3hr_adj.P.Val', 'CC_3hr-control_3hr_adj.P.Val', 'LPS_3hr-control_3hr_adj.P.Val']
+colPlotnames.loc['adjPval_12h'] =['BL21_12hr-control_12hr_adj.P.Val', 'CC_12hr-control_12hr_adj.P.Val', 'LPS_12hr-control_12hr_adj.P.Val']
+colPlotnames.loc['sample1_12h'] = ['sample.24', 'sample.16', 'sample.32']
+colPlotnames.loc['sample2_12h'] = ['sample.23', 'sample.15', 'sample.31']
+colPlotnames.loc['sample3_12h'] = ['sample.22', 'sample.14', 'sample.30']
+colPlotnames.loc['sample4_12h'] = ['sample.21', 'sample.13', 'sample.29']
+colPlotnames.loc['sample1_3h'] = ['sample.20', 'sample.12', 'sample.28']
+colPlotnames.loc['sample2_3h'] = ['sample.19', 'sample.11', 'sample.27']
+colPlotnames.loc['sample3_3h'] = ['sample.18', 'sample.10', 'sample.26']
+colPlotnames.loc['sample4_3h'] = ['sample.17', 'sample.9', 'sample.25']
+
 for experiment in ['logFC_3h', 'logFC_12h']:
-    selectedcols = colnames.loc[experiment]
+    selectedcols = colnames.loc[experiment].to_list()
+    selectedcols.append('external_gene_name')
     pathdata = dex[selectedcols]
-    pathdata['external_gene_name'] = dex['external_gene_name']
+    
+    # rename for plotting
+    newColNames = colPlotnames.loc[experiment].to_list()
+    newColNames.append('external_gene_name')
+    pathdata.columns = newColNames
+    # pathdata.set_axis(newColNames, axis=1, copy=False)
 
     # pathdata = pathdata[pathdata['external_gene_name'].isin(KeyPathway_IL_17)]
 
-    g = sns.pairplot(pathdata)
+    pp = sns.pairplot(pathdata)
+
+    # pp.axes[0,0].xlabel("log2FC")
     plt.savefig('../plots/'+ experiment+'.png')
 
 

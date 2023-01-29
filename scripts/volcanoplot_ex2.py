@@ -49,3 +49,73 @@ colnames.loc['sample4_3h'] = ['sample.17', 'sample.9', 'sample.25']
 
 # https://www.reneshbedre.com/blog/volcano.html
 # https://hemtools.readthedocs.io/en/latest/content/Bioinformatics_Core_Competencies/Volcanoplot.html
+
+pvalThres = 0.05
+FCThres = 2
+
+# logFCcol = 'BL21_3hr-control_3hr_logFC'
+# adjPvalcol = 'BL21_3hr-control_3hr_adj.P.Val'
+
+# logFCcol = colnames['HRPII_BL21']['logFC_3h']
+# adjPvalcol = colnames['HRPII_BL21']['adjPval_3h']
+# title = 'HRPII_BL21 (3h)'
+
+# logFCcol = colnames['HRPII_CC']['logFC_3h']
+# adjPvalcol = colnames['HRPII_CC']['adjPval_3h']
+# title = 'HRPII_CC (3h)'
+
+# logFCcol = colnames['HRPII_BL21']['logFC_12h']
+# adjPvalcol = colnames['HRPII_BL21']['adjPval_12h']
+# title = 'HRPII_BL21 (12h)'
+
+logFCcol = colnames['HRPII_CC']['logFC_12h']
+adjPvalcol = colnames['HRPII_CC']['adjPval_12h']
+title = 'HRPII_CC (12h)'
+
+plt.scatter(x=dex[logFCcol],
+            y=dex[adjPvalcol].apply(lambda x:-np.log10(x)),
+            s=1,
+            label="Not significant",
+            color='grey')
+
+# highlight down- or up- regulated genes
+down = dex[(dex[logFCcol]<=-FCThres) & (dex[adjPvalcol]<=pvalThres)]
+up = dex[(dex[logFCcol]>=FCThres) & (dex[adjPvalcol]<=pvalThres)]
+
+plt.scatter(x=down[logFCcol],
+            y=down[adjPvalcol].apply(lambda x:-np.log10(x)),
+            s=3,
+            label="Down-regulated",
+            color="blue")
+
+plt.scatter(x=up[logFCcol],
+            y=up[adjPvalcol].apply(lambda x:-np.log10(x)),
+            s=3,
+            label="Up-regulated",
+            color="red")
+
+plt.title(title)
+plt.xlabel("log$_2$FC")
+plt.ylabel("-log$_{10}$adjPVal")
+
+# adding 2 vertical lines to identify representative FC
+plt.axvline(-FCThres,color="grey",linestyle="--")
+plt.axvline(FCThres,color="grey",linestyle="--")
+
+# adding horizontal line (and label) to mark significant p-value
+ax = plt.gca()
+yt = ax.get_yticks()
+yt=np.append(yt,1.5)
+
+ytl=yt.tolist()
+ytl[-1]="-log$_{10}$(" + str(pvalThres) + ")"
+ax.set_yticks(yt)
+ax.set_yticklabels(ytl)
+
+# plt.axhline(2,color="grey",linestyle="--")
+plt.axhline(-np.log10(pvalThres),color="grey",linestyle="--")
+
+plt.legend()
+
+plt.savefig('../plots/volcano_' + title+ '.png', bbox_inches="tight")
+# plt.show()
