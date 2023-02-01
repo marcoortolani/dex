@@ -8,7 +8,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 #from matplotlib.ticker import ScalarFormatter
 import matplotlib.ticker as mticker
-from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import LinearSegmentedColormap, ListedColormap
+# from matplotlib.colors import DivergingNorm
+from matplotlib.colors import TwoSlopeNorm
 
 cmpfile = '../data/Gene_biotype_summary.tsv'
 geneCMP = pd.read_csv(cmpfile, index_col=0, sep='\t', comment='#')
@@ -30,8 +32,12 @@ plt.rcParams['xtick.labelsize'] = 8
 # ax = plt.gca()
 # ax.yaxis.set_major_formatter(ScalarFormatter(useOffset=False))
 
+print("No of colors: " + str(geneCMP.shape[1]))
+
 colors = sns.color_palette("viridis_r", n_colors=geneCMP.shape[1])
-# colors = sns.color_palette("RdYlGn", n_colors=geneCMP.shape[1])
+colors = sns.color_palette("RdYlGn", n_colors=geneCMP.shape[1])
+# colors = sns.color_palette("Greens", n_colors=geneCMP.shape[1])
+#colors.reverse()
 # colors = sns.color_palette("PiYG", n_colors=geneCMP.shape[1])
 cmap1 = LinearSegmentedColormap.from_list("my_colormap", colors)
 
@@ -40,7 +46,24 @@ cmap1 = LinearSegmentedColormap.from_list("my_colormap", colors)
 # reverse row order (just for clean plotting)
 geneCMP = geneCMP.iloc[::-1]
 
-geneCMP.plot (kind = 'bar', stacked = True, width=0.8, colormap=cmap1)
+#geneCMP.plot (kind = 'bar', stacked = True, width=0.8, colormap=cmap1)
+
+#colors = [(0.97, 0.46, 0.42), (0, 0.75, 0.73)] 
+colors = [(0.97, 0.46, 0.42), (0, 0.74, 0.41)] 
+top = LinearSegmentedColormap.from_list(
+        "Custom", colors, N=19)
+
+#colors = [(0, 0.74, 0.8), (0.99, 0.43, 0.52)] 
+colors = [(0, 0.74, 0.498), (0.99, 0.43, 0.52)] 
+bottom = LinearSegmentedColormap.from_list(
+        "Custom", colors, N=18)
+
+newcolors = np.vstack((top(np.linspace(0, 1, 128)),
+                       bottom(np.linspace(0, 1, 128))))
+newcmp = ListedColormap(newcolors, name='OrangeBlue')
+
+geneCMP.plot(kind = 'bar', stacked = True, width=0.8, colormap=newcmp)
+
 
 # after plotting the data, format the labels
 ticks_loc = plt.gca().get_yticks().tolist()
@@ -69,7 +92,8 @@ plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left", ncol=2,
             fontsize="xx-small",
             frameon=False)
 
-plt.savefig("../plots/cpm_biotype.png", bbox_inches="tight")
+# plt.savefig("../plots/cpm_biotype.png", bbox_inches="tight")
+plt.savefig("../plots/cpm_biotype.svg", bbox_inches="tight")
 
 # show the graph
 # plt.show()

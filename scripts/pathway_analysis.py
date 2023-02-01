@@ -77,45 +77,6 @@ for experiment in ['logFC_3h', 'logFC_12h']:
     pp = sns.pairplot(pathdata)
 
     # pp.axes[0,0].xlabel("log2FC")
-    plt.savefig('../plots/'+ experiment+'.png')
+#    plt.savefig('../plots/'+ experiment+'.png')
+    plt.savefig('../plots/'+ experiment+'.svg')
 
-
-
-exit()
-mde_3h_BL21_CC_LPS = pd.read_csv('../data/MDE_Log2FC_3h_BL21_CC_LPS.csv', index_col=0, comment='#')
-
-# col_name = names.loc['3h_BL21_CC_LPS']['HRPII_BL21']
-
-# for x in KeyPathway_IL_17_12h:
-#     print(mde_3h_BL21_CC_LPS.loc[x][col_name])
-
-# plt.figure(figsize=(9,6)) # Set plot dimensions
-
-# sns.regplot(x=mde_3h_BL21_CC_LPS.index, y="BL21_3hr-control_3hr_logFC", data=mde_3h_BL21_CC_LPS)
-
-#pathdata = mde_3h_BL21_CC_LPS[mde_3h_BL21_CC_LPS.index.isin(KeyPathway_IL_17_12h)]
-pathdata = mde_3h_BL21_CC_LPS
-
-pathdata = pathdata.reset_index(level=0)
-melted_df = pd.melt(pathdata, id_vars="external_gene_name", var_name="experiment")
-
-sns.catplot(data=melted_df, x="external_gene_name", y="value", hue="experiment", kind="point")
-
-# https://seaborn.pydata.org/tutorial/categorical.html
-# https://stats.stackexchange.com/questions/108007/correlations-with-unordered-categorical-variables
-# https://warwick.ac.uk/fac/sci/moac/people/students/peter_cock/r/iris_plots/
-# https://pythonbasics.org/seaborn-pairplot/
-
-g = sns.pairplot(pathdata)
-plt.savefig('save_as_a_png.png')
-
-
-logFCcols = ['BL21_3hr-control_3hr_logFC', 'CC_3hr-control_3hr_logFC', 'LPS_3hr-control_3hr_logFC']
-
-corr_matrix = pathdata[logFCcols].corr()
-
-print(corr_matrix)
-
-sns.heatmap(corr_matrix, annot=True)
-
-plt.show()
