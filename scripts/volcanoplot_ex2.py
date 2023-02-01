@@ -53,6 +53,7 @@ colnames.loc['sample4_3h'] = ['sample.17', 'sample.9', 'sample.25']
 pvalThres = 0.05
 FCThres = 2
 
+# OLD
 # logFCcol = 'BL21_3hr-control_3hr_logFC'
 # adjPvalcol = 'BL21_3hr-control_3hr_adj.P.Val'
 
@@ -68,9 +69,17 @@ FCThres = 2
 # adjPvalcol = colnames['HRPII_BL21']['adjPval_12h']
 # title = 'HRPII_BL21 (12h)'
 
-logFCcol = colnames['HRPII_CC']['logFC_12h']
-adjPvalcol = colnames['HRPII_CC']['adjPval_12h']
-title = 'HRPII_CC (12h)'
+# logFCcol = colnames['HRPII_CC']['logFC_12h']
+# adjPvalcol = colnames['HRPII_CC']['adjPval_12h']
+# title = 'HRPII_CC (12h)'
+
+# logFCcol = colnames['LPS']['logFC_3h']
+# adjPvalcol = colnames['LPS']['adjPval_3h']
+# title = 'LPS (3h)'
+
+logFCcol = colnames['LPS']['logFC_12h']
+adjPvalcol = colnames['LPS']['adjPval_12h']
+title = 'LPS (12h)'
 
 plt.scatter(x=dex[logFCcol],
             y=dex[adjPvalcol].apply(lambda x:-np.log10(x)),
@@ -117,5 +126,6 @@ plt.axhline(-np.log10(pvalThres),color="grey",linestyle="--")
 
 plt.legend()
 
-plt.savefig('../plots/volcano_' + title+ '.png', bbox_inches="tight")
+#plt.savefig('../plots/volcano_' + title+ '.png', bbox_inches="tight")
+plt.savefig('../plots/volcano_' + title+ '.svg', bbox_inches="tight")
 # plt.show()
